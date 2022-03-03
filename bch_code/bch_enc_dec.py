@@ -36,12 +36,11 @@ packet=[int(packet_binary[i:i+8],2) for i in range(0,len(packet_binary),8)]#将�
 packet=bytes(packet)#转换为byte类型
 packet = bytearray(packet)#转换为bytearray
 data, ecc = packet[:-bch.ecc_bytes], packet[-bch.ecc_bytes:]#分离数据与编码
-bitflips = bch.decode_inplace(data, ecc)#检查编码与数据是否匹配
+bitflips = bch.decode_inplace(data, ecc)#纠错，该步实际上已经对data进行了修改
 #bitflips, data, ecc = bch.decode(data, ecc)#纠错
-
-if bitflips != -1:#如果匹配                                   
+if bitflips != -1:#如果错误位数小于纠错位数（字节数）                                  
     code = data.decode("utf-8")#按照utf-8将字节解码回字符串                       
     print(code)                                                             
-else:#如果不匹配
+else:#如果错误位数大于最大纠错位数（字节数）  
     print('Failed to decode')
 
